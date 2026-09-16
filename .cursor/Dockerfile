@@ -21,6 +21,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libgtsam-unstable-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN curl -fsSL -o /usr/local/bin/curl \
+        https://github.com/moparisthebest/static-curl/releases/download/v8.7.1/curl-amd64 \
+    && chmod +x /usr/local/bin/curl \
+    && hash -r \
+    && curl --version | head -1
+
 RUN git clone --depth 1 -b v0.4.0 https://github.com/google/glog.git /tmp/glog \
     && cd /tmp/glog \
     && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=ON -DWITH_GFLAGS=ON -DBUILD_TESTING=OFF \
