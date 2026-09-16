@@ -1,4 +1,4 @@
-FROM osrf/ros:melodic-desktop-full
+FROM osrf/ros:noetic-desktop-full
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -27,12 +27,13 @@ RUN curl -fsSL -o /usr/local/bin/curl \
     && hash -r \
     && curl --version | head -1
 
-RUN git clone --depth 1 -b v0.4.0 https://github.com/google/glog.git /tmp/glog \
+RUN git clone --depth 1 -b v0.6.0 https://github.com/google/glog.git /tmp/glog \
     && cd /tmp/glog \
-    && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=ON -DWITH_GFLAGS=ON -DBUILD_TESTING=OFF \
-    && cd build && make -j"$(nproc)" install \
+    && cmake -S . -B build -DBUILD_SHARED_LIBS=ON -DWITH_GFLAGS=ON -DBUILD_TESTING=OFF \
+    && cmake --build build -j"$(nproc)" \
+    && cmake --install build \
     && ldconfig \
     && rm -rf /tmp/glog
 
-RUN echo 'source /opt/ros/melodic/setup.bash' >> /root/.bashrc \
+RUN echo 'source /opt/ros/noetic/setup.bash' >> /root/.bashrc \
     && echo '[ -f "$HOME/catkin_ws/devel/setup.bash" ] && source "$HOME/catkin_ws/devel/setup.bash"' >> /root/.bashrc
